@@ -8,7 +8,7 @@ setuptools.setup(
 	version="0.0.1", 
 	author="Mulham Alamry", 
 	author_email="mulhamreacts@gmail.com", 
-	packages=["FastHttp"], 
+	packages=["FastHttpServer"], 
 	description="An extremely lightweight and fast http server", 
 	long_description=description, 
 	long_description_content_type="text/markdown", 
