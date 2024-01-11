@@ -24,15 +24,6 @@ Also make sure the python 'socket' package is installed
 import FastHttpServer
 ```
 
-2. To run the server use the initServer() function and specify the port:
-
-
-```python
-FastHttpServer.initServer(3000)
-```
-
-This will make the server listen on `localhost` at port `3000`. You can customize the port by changing the port parameter.
-
 
 3. Access the server in your browser:
 
@@ -47,6 +38,16 @@ use the route wrapper and specify the route path. Make sure the proceeding funct
 def index(request):
     return '<h1>Success!</h1>'
 ```
+
+4. To run the server use the initServer() function and specify the port:
+
+
+```python
+FastHttpServer.initServer(3000)
+```
+
+This will make the server listen on `localhost` at port `3000`. You can customize the port by changing the port parameter.
+Make sure this is the last line of code in your project.
 
 ## Notes
 
