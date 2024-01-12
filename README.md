@@ -17,42 +17,66 @@ Also make sure the python 'socket' package is installed
 
 ## Usage
 
-1. After installation, you can import the package:
+1. After installation, you can import and run the package:
 
+
+```python
+from FastHttpServer import App
+app = App()
+```
+
+or, if App is already reserved:
 
 ```python
 import FastHttpServer
+app = FastHttpServer.App()
 ```
 
+2. Specify the routes of the server
 
-3. Access the server in your browser:
-
-Open your web browser and navigate to [http://localhost:3000](http://localhost:3000) (or the custom port you specified). You should see a 404 page indicating that the server is running.
-
-4. Specify the routes of the server
-
-use the route wrapper and specify the route path. Make sure the proceeding function has a request parameter:
+use the app route wrapper and specify the route path. Make sure the proceeding function has a request parameter:
 
 ```python
-@FastHttpServer.route('/')
+@app.route('/')
 def index(request):
     return '<h1>Success!</h1>'
 ```
 
-4. To run the server use the initServer() function and specify the port:
-
+by default the route only accepts GET requests if you want to accept POST or any other, specify in the methods parameter of the route wrapper:
 
 ```python
-FastHttpServer.initServer(3000)
+@app.route('/', methods=['GET', 'POST'])
+def index(request):
+    if request['method'] == 'GET':
+        return '<h1>Success</h1>'
+    else:
+        return {'message': 'Success!'}
 ```
 
-This will make the server listen on `localhost` at port `3000`. You can customize the port by changing the port parameter.
-Make sure this is the last line of code in your project.
+It automatically detects html and json so no need to use json.dumps!
+
+3. Run the server:
+
+First, run the server by calling the listen function of 'app':
+
+```python
+app.listen()
+```
+By default, it runs on localhost port 3000 you can specify parameters to change both of those:
+
+```python
+app.listen(PORT=8000, ADDRESS='127.0.0.1')
+```
+
+Open your web browser and navigate to [http://localhost:3000](http://localhost:3000) (or the custom port and address you specified). You should see a success or 404 indicating that the server is running.
+
 
 ## Notes
 
 - This server is suitable for serving static content in development and testing environments. For production use, consider security and scalability aspects.
 
-- FastHttpServer is intentionally kept minimalistic. For more advanced features and dynamic content, consider using a full-fledged web framework.
+- FastHttpServer is intentionally kept advanced and minimalistic.
+ 
+- Make sure the server listen is called last the routes below it wont work.
 
 Feel free to use and contribute to FastHttpServer. Keep your web serving simple and enjoy the speed!
