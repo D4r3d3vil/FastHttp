@@ -25,16 +25,21 @@ def create_response(path, headers):
 		else: return 'HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\n\r\n404 Not Found'
 
 def handle_connection(connection):
-	req = connection.recv(1024).decode()
-	key_val = req.split(None)
-	if len(key_val) < 2:
-		return connection.close()
-	path = key_val[1]
-	headers = {key.rstrip(':'): value for key, value in dict(zip(key_val[3:len(key_val)][0::2], key_val[3:len(key_val)][1::2])).items()}
-	headers['method'] = key_val[0]
-	res = create_response(path, headers)
-	connection.send(res.encode('utf-8'))
-	connection.close()
+    req = connection.recv(1024).decode()
+    key_val = req.split(None)    
+    if len(key_val) < 2:
+        return connection.close()    
+    path = key_val[1].split('?')[0]
+    url_params = key_val[1].split('?')[1] if '?' in key_val[1] else None    
+    headers = {key.rstrip(':'): value for key, value in dict(zip(key_val[3:len(key_val)][0::2], key_val[3:len(key_val)][1::2])).items()}
+    if url_params:
+        url_params_dict = dict(kv.split('=') for kv in url_params.split('&'))
+        headers.update(url_params_dict)
+    headers['method'] = key_val[0]
+    res = create_response(path, headers)
+    connection.send(res.encode('utf-8'))
+    connection.close()
+
 
 def initServer(PORT=3000, ADDRESS='localhost'):
 	server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -42,7 +47,7 @@ def initServer(PORT=3000, ADDRESS='localhost'):
 		server_socket.bind((ADDRESS, PORT))
 	except:
 		initServer(PORT + 1)
-	server_socket.listen(5)
+	server_socket.listen(128)
 	print(f'Running on: http://localhost:{PORT}')
 
 	while True:
