@@ -8,21 +8,48 @@ def view(path, methods=['GET']):
 
 	return wrapper
 
+import json
+
 def create_response(path, headers):
-	if path in routes:
-		if not headers['method'] in routes[path]['methods']:
-			return 'HTTP/1.1 405 Method Not Allowed\r\nContent-Type: text/plain\r\n\r\nMethod Not Allowed'
-		res = routes[path]['func'](headers)
-		res_type = type(res).__name__
-		if res_type == 'dict': return f'HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n{json.dumps(res)}'
-		if res_type == 'str': return f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n{res}'
-	else:
-		if '404' in routes:
-			res = routes['404']['func'](headers)
-			res_type = type(res).__name__
-			if res_type == 'dict': return f'HTTP/1.1 404 Not Found\r\nContent-Type: application/json\r\n\r\n{json.dumps(res)}' 
-			if res_type == 'str': return f'HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n\r\n{res}'
-		else: return 'HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\n\r\n404 Not Found'
+    if path in routes:
+        if not headers['method'] in routes[path]['methods']:
+            return 'HTTP/1.1 405 Method Not Allowed\r\nContent-Type: text/plain\r\n\r\nMethod Not Allowed'
+
+        res = routes[path]['func'](headers)
+        res_type = type(res).__name__
+
+        # Check the type of response and construct the HTTP response accordingly
+        if res_type == 'dict':
+            response = f'HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n'
+            response += 'Access-Control-Allow-Origin: *\r\n'  # Adding CORS header
+            response += '\r\n'
+            response += json.dumps(res)
+            return response
+        elif res_type == 'str':
+            response = f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n'
+            response += 'Access-Control-Allow-Origin: *\r\n'  # Adding CORS header
+            response += '\r\n'
+            response += res
+            return response
+    else:
+        if '404' in routes:
+            res = routes['404']['func'](headers)
+            res_type = type(res).__name__
+            if res_type == 'dict':
+                response = f'HTTP/1.1 404 Not Found\r\nContent-Type: application/json\r\n'
+                response += 'Access-Control-Allow-Origin: *\r\n'  # Adding CORS header
+                response += '\r\n'
+                response += json.dumps(res)
+                return response
+            elif res_type == 'str':
+                response = f'HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n'
+                response += 'Access-Control-Allow-Origin: *\r\n'  # Adding CORS header
+                response += '\r\n'
+                response += res
+                return response
+        else:
+            return 'HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\n\r\n404 Not Found'
+
 
 def handle_connection(connection):
     req = connection.recv(1024).decode()
