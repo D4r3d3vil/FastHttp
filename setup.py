@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup( 
 	name="FastHttpServer", 
-	version="1.1.3", 
+	version="2.0.0", 
 	author="Mulham Alamry", 
 	author_email="mulhamreacts@gmail.com", 
 	packages=["FastHttpServer"], 

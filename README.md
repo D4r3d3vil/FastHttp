@@ -42,10 +42,10 @@ def index(request):
     return '<h1>Success!</h1>'
 ```
 
-by default the route only accepts GET requests if you want to accept POST or any other, specify in the methods parameter of the route wrapper:
+by default the route only accepts GET requests if you want to accept POST or any other and it can allow or disallow cors (default: False), specify in the methods parameter of the route wrapper:
 
 ```python
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'], allow_cors=True)
 def index(request):
     if request['method'] == 'GET':
         return '<h1>Success</h1>'
