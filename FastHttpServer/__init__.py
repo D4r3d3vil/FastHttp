@@ -20,20 +20,20 @@ def create_response(path, headers):
 
         # Check the type of response and construct the HTTP response accordingly
         if res_type == 'dict':
-            response = f'HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n{'Access-Control-Allow-Origin: *' if routes[path]['cors'] else ''}\r\n\r\n{json.dumps(res)}'
+            response = f'HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n{"Access-Control-Allow-Origin: *" if routes[path]['cors'] else ''}\r\n\r\n{json.dumps(res)}'
             return response
         elif res_type == 'str':
-            response = f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n{'Access-Control-Allow-Origin: *' if routes[path]['cors'] else ''}\r\n\r\n{res}'
+            response = f'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n{"Access-Control-Allow-Origin: *" if routes[path]['cors'] else ''}\r\n\r\n{res}'
             return response
     else:
         if '404' in routes:
             res = routes['404']['func'](headers)
             res_type = type(res).__name__
             if res_type == 'dict':
-                response = f'HTTP/1.1 404 Not Found\r\nContent-Type: application/json\r\n{'Access-Control-Allow-Origin: *' if routes['404']['cors'] else ''}\r\n\r\n{json.dumps(res)}'
+                response = f'HTTP/1.1 404 Not Found\r\nContent-Type: application/json\r\n{"Access-Control-Allow-Origin: *" if routes['404']['cors'] else ''}\r\n\r\n{json.dumps(res)}'
                 return response
             elif res_type == 'str':
-                response = f'HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n{'Access-Control-Allow-Origin: *' if routes['404']['cors'] else ''}\r\n\r\n{res}'
+                response = f'HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n{"Access-Control-Allow-Origin: *" if routes['404']['cors'] else ''}\r\n\r\n{res}'
                 return response
         else:
             return 'HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\n\r\n404 Not Found'
