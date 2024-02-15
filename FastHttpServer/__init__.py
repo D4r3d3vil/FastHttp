@@ -18,7 +18,6 @@ def create_response(path, headers):
         res = routes[path]['func'](headers)
         res_type = type(res).__name__
 
-        # Check the type of response and construct the HTTP response accordingly
         if res_type == 'dict':
             response = f'HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n{"Access-Control-Allow-Origin: *" if routes[path]['cors'] else ''}\r\n\r\n{json.dumps(res)}'
             return response
